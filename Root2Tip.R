@@ -2,6 +2,9 @@ library(ape)
 library(phytools)
 
 setwd("/RAxML/") #Specify your working directory where all of your ML trees are located
+#Enter the order of the date in the name of you taxa (should be named consisently with "_" separating the components of the label)
+#For example, if your taxa names Location_Isolate#_Year (e.g. USA_02_1982), then it should be set to 3
+date <- 3 
 
 #Getting tree files
 tree.files <- list.files(".", pattern=".tre") #obtaining names of all trees in folder
@@ -43,7 +46,7 @@ for(i in tree.names){
   tree <- read.newick(file=treepath) # I updated this to "read.newick" which is more robust then read tree
   tips <- tree$tip.label #obtain tip labels from phylogeny and abstract year from last time point
   tip.info <- strsplit(tips, "_") # split string by '_'
-  tip.dates <- as.numeric(sapply(tip.info, "[", 3))  #THIS NEEDS TO BE CHANGED BASED ON NAMING
+  tip.dates <- as.numeric(sapply(tip.info, "[", date))  #date will input order of the year in the name
   rooted.tre <- rtt(tree, tip.dates, ncpu = 1, objective = "correlation", opt.tol = .Machine$double.eps^0.25)  
   
   missing.indices <- which(is.na(tip.dates))
